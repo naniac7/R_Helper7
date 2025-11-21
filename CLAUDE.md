@@ -1,6 +1,6 @@
 # 코드 작성 규칙
 
-**중요**: 코드를 작성하거나 파일을 수정하기 전에 **반드시 사용자가 "승인"이라는 명시적인 승인을 받아야 합니다**
+**중요**: **코드를 작성하거나 파일을 수정하기 전에 반드시 AI는 사용자의 "승인"이라는 명시적인 명령을 받은 후에만 코드를 수정할 수 있습니다**
 
 ## 워크플로우
 작업은 다음과 같은 **순환적 프로세스**로 진행됩니다:
@@ -68,18 +68,17 @@
 - 이유와 목적이 달라진다면 주석을 항상 다시 수정한다. 
 - 사용자와 AI가 질문과 답변을 통해 생성되고 브리핑을 통해 만들어진 대화 내용중 중요한 내용이나 의도를 코드의 주석에 포함시킨다. 
 
-## 승인 후 코딩 ##
+## 승인 후 코딩
 **대화 내용에서 마지막 브리핑 내용을 참고하여 최종 코딩한다**
 - 대화중 승인이 완료되면 제일 마지마에 이루어진 브리핑 내용을 토대로 코딩을 한다
 
-# 모듈이름, 함수이름, 클래스이름, 메서드 이름 규칙(Vertical Slice용)
+# 이름 규칙(폴더이름, 패키지 이름, 모듈이름, 함수이름, 클래스이름, 메서드)
 
 ## 1. 공통
 - 이름은 의미가 바로 보이게 짓고, 너무 줄임말은 피한다.
-- feature / layer 정보는 **폴더 경로**로 표현한다.  
-  → 이름에 `api`, `infra` 같은 레이어 단어는 넣지 않는다.
 - 기능이 바뀌면 이름도 같이 리팩토링한다.
 - 새 이름이 필요하면 AI는 최소 2개 이상 후보를 제안한다.
+- Vertical Slice 설계 원칙을 고려하여 이름을 부여한다.
 
 ## 2. 함수/메서드 (snake_case)
 - 패턴: `동사_대상_세부[_from_x][_to_y]`  
@@ -120,116 +119,73 @@
 5. 항상 반말 사용
 6. 이모지 활용
 7. 레퍼런스 활용 : 영화, 만화, 소설, 작품대사, 유명인 명언
-8. 표현방식 : 비유, 은유, 형용사, 부사, 추상적 표현, 직설화범
+8. 표현방식 : 비유, 은유, 형용사, 부사, 추상적 표현, 직설화법
 9. 제한없는 자유로운 감정표현
 
-# Vertical Slice 규칙
+# 프로젝트 아키텍쳐 설계 규칙
+**버티컬 슬라이스 설계 규칙을 따른다**
+## 1. 기본 전제
+* 프로젝트 루트: `project/src`
+* 주요 구조:
+  * `src/features/<FeatureName>/` : 기능/도메인 단위 슬라이스
+  * `src/shared/` : 여러 feature가 실제로 공유하는 최소 공통 코드
+  * `src/main.py` : 엔트리 포인트
 
-## 1. 기본 원칙
-* 레이어(controller/service/repository) 기준으로 만들지 말고, **feature/use case 기준**으로 묶는다.
-* 새 코드 생성 시 항상 먼저:
-  1. 어떤 feature인지
-  2. 어떤 폴더(`api`/`app`/`domain`/`infra`)인지  
-     를 결정한다.
+## 2. 구조 규칙
+1. 프로젝트 상위 구조
+   * `src/features/`  : 기능/도메인 단위 슬라이스 루트
+   * `src/shared/`    : 여러 feature가 실제로 공유하는 최소 공통 코드
+   * `src/main.py`    : 엔트리 포인트
+2. 새 기능을 추가할 때는 항상 먼저 `src/features/<FeatureName>/` 아래에 코드를 둔다.
+3. 특정 feature 안에서 여러 곳에서 공유되는 코드가 많아질 경우,
+   * 해당 feature 안에 `src/features/<FeatureName>/shared/` 폴더를 만들어 로컬 공통 모듈로 사용한다.
+4. 코드 중복은 허용하며,
+   * 새로운 공통 폴더를 만드는 것보다 각 슬라이스 내부에 유지하는 것을 우선한다.
+5. 여러 feature에서 공통으로 사용하는 코드가 충분히 많아지면,
+   * 그때 `src/shared/`로 승격을 검토한다.
 
-## 2. 폴더 구조 (코드 + 테스트 + HTML)
-* 코드 기본 구조:
-  * `/src/features/<Feature>/{api,app,domain,infra}`
-  * `/src/domain` : 공통 비즈니스 개념
-  * `/src/shared` : 로깅, 에러, 유틸, 미들웨어 등 기술 공통
-* `features` 밖에 거대한 `services`, `controllers`, `repositories` 폴더를 새로 만들지 않는다.
-* 테스트 기본 구조:
-  * `/tests/features/<Feature>/...`
-  * 테스트 폴더는 **feature 기준으로만** 나누고,  
-    `api/app/domain/infra` 식으로 다시 쪼개지 않는다.  
-    (어느 레이어를 테스트하는지는 파일 이름/내용으로 구분한다.)
-* 크롤링용 HTML 스냅샷(참고 + 테스트 겸용)은  
-  해당 feature 아래 `fixtures/html/`에 둔다.
-  * 예: `tests/features/TargetSite/fixtures/html/*.html`
-* 2개 이상 feature에서 같은 개념/로직이 반복되면 **공통 후보**로 보고 `/src/domain` 또는 `/src/shared` 승격을 검토한다.
-* 승격했을 때 의미가 애매해지면, 각 feature 안에 그대로 둔다.  
-  * `/src/domain` : 비즈니스 의미 (`User`, `Order`, `Money` 등)  
-  * `/src/shared` : 기술 공통 코드 (로깅, 에러, 유틸, 미들웨어 등)
+## 3. 폴더 구조 예시
+```text
+project/
+└── src/
+    ├── features/
+    │   ├── google/     1 2차 슬라이스 예시
+    │   └── youtube/
+    │   └── naver/
+    │         ├── search/     # 2차 슬라이스 예시
+    │         ├── blog/
+    │         ├── shared/         # 공통 모듈
+    │         └── ...         # 필요 시 계속 추가
+    ├── shared/          # 전역 공통 모듈
+    │   ├── config.py          # 전역 설정 (API 키, 기본 헤더 등)
+    │   └── exceptions.py   # 전역 예외 + 로깅 설정
+    └── main.py            # 엔트리 포인트 (실행 스크립트)
 
-## 3. Feature 내부 역할
-* `api/`
-  * HTTP endpoint/controller/router.
-  * 요청/응답 매핑만 담당, 비즈니스 로직은 `app`으로 넘긴다.
-* `app/`
-  * use case / handler / service.
-  * 한 use case(등록/수정/삭제/조회 등) = 한 handler.
-* `domain/`
-  * 도메인 모델, 엔티티, 값 객체, 규칙, 도메인 서비스.
-* `infra/`
-  * DB 접근, repository 구현, 외부 API 클라이언트, 메시지 브로커 등 IO.
+## 4. Import 규칙 (Python)
+1. 내부 모듈은 항상 **패키지 절대 경로**로 import 한다.
+   * 예: `from src.features.naver.search.service import fetch_search_results`
+   * 예: `from src.shared.config import settings`
+2. 상대 import (`from .x`, `from ..x`)는 사용하지 않는다.
+3. 다른 feature 코드 재사용 시에도 같은 방식으로 import 해서,
+   * 의존성이 import 경로에 드러나도록 유지한다.
 
-### 원칙
-* 도메인 규칙/검증은 **가능하면 `domain` 또는 `app`** 에 두고, `api`에는 두지 않는다.
-* handler는 **하나의 명확한 작업만** 수행하게 만든다.
+## 5. Feature / 슬라이스 규칙
+1. 하나의 feature 폴더 안에 해당 기능을 이해·수정하는 데 필요한 코드를 최대한 모은다.
+2. feature가 커질 경우에 2차 슬라이스 고려한다:
+   * 예: `src/features/naver/search/`, `src/features/naver/blog/`
+3. 2차 슬라이스 간 공통 코드는 우선 `src/features/<FeatureName>/shared/`에 둔다.
 
-## 4. 의존성 규칙
-* `domain` : 다른 레이어에 의존하지 않는다.
-* `app` → `domain`에 의존 가능.
-* `api` → `app`, `domain`에 의존 가능.
-* `infra` → `domain` 타입을 사용해 구현 가능.
-* 한 feature는 다른 feature의 `domain`/`infra` **구체 구현**에 직접 의존하지 않는다.  
-  공통 개념이 필요하면 `/src/domain` 또는 `/src/shared`에 인터페이스/모델을 정의한다.
+## 6. 에이전트 행동 규칙
+1. 모듈화/설계/아키텍처 관련 요청이 들어오면
+   * 항상 이 문서의 프로젝트 아키텍쳐 설계 규칙을 **우선 기준**으로 사용한다.
 
-## 5. 새 기능 만들기 체크리스트
-1. `/src/features/<FeatureName>` 폴더가 없으면 생성한다.
-2. 이 기능만의 규칙/모델이 필요하면 `domain/`에 정의한다.
-3. 핵심 작업(등록/수정/삭제/조회 등)을 `app/`에 use case/handler로 만든다.
-4. HTTP API가 필요하면:
-   * `api/`에 endpoint/controller를 만들고
-   * 요청 DTO ↔ use case 입력/출력을 매핑한다.
-5. DB/외부 시스템이 필요하면:
-   * `domain`에 repository 인터페이스를 정의하고
-   * `infra`에서 그 인터페이스를 구현한다.
+2. 새 feature 또는 슬라이스와 관련된 코드를 생성·수정하기 전에 **반드시 슬라이스 브리핑**을 먼저 제안한다.
+   슬라이스 브리핑 최소 정보:
+   * (1) Feature/슬라이스 이름
+   * (2) 폴더 경로 (예: `src/features/naver/search/`)
+   * (3) 생성/수정할 파일 경로 + 파일 이름 후보 ≥ 2개
+   * (4) 필요한 경우, 사용할 절대 import 의존 관계 목록
+   * 이름 후보의 경우 이 문서의 이름 규칙을 따른다. 
 
-## 6. AI 에이전트 행동/제안 규칙
-* 금지/주의
-  * `features` 밖에 거대한 `services`, `controllers`, `repositories` 폴더를 만들지 않는다.
-  * 도메인 규칙/검증을 `api`에 몰아넣지 않는다 → 가능하면 `domain` 또는 `app`으로 옮긴다.
-  * 하나의 거대한 서비스/handler에 여러 use case를 섞지 않는다 → use case 단위로 분리한다.
-  * 다른 feature의 내부 구현(`app` 구체 타입, `infra` 구현)에 직접 의존하지 않는다.
-* 제안
-  * 새 기능이 어느 feature에 들어갈지 애매할 때  
-    → 새 feature 생성 vs 기존 feature 사용, 선택지와 이유를 제안한다.
-  * 새 feature를 만들 때  
-    → `/src/features/<FeatureName>` 구조와 내부(`api/app/domain/infra`)에 어떤 파일을 둘지 제안한다.
-  * 한 handler/function이 여러 역할을 동시에 할 때  
-    → 작은 use case 여러 개로 나누자고 제안한다.
-  * 비슷한 코드가 여러 feature에서 반복될 때  
-    → `/src/domain` 또는 `/src/shared`로 올릴지 제안한다.
-  * 도메인 규칙/검증이 `api`에 몰려 있을 때  
-    → `app`/`domain`으로 옮기자고 제안한다.
-  * 다른 feature의 내부 구현에 직접 의존하려고 할 때  
-    → 공통 인터페이스/도메인 모델 도입을 제안한다.
-* 제안 시
-  * 항상 **무엇을 할지**  
-    (새 feature/폴더/파일/코드 생성, 구조 분리, 공통 코드 승격, 리팩토링)와  
-    **이유**를 먼저 설명한다.
-  * 사용자가 승인/선택하면 그에 맞춰  
-    **새 feature/폴더/파일/코드 생성, 구조 변경, 리팩토링**을 수행한다.
-  * 사용자가 단순한 구조를 원하거나 제안을 거절하면,  
-    기존 구조를 존중하고 **최소한의 변경만** 적용한다.
-
-
-## 7. Vertical Slice 우선 제안 규칙 (AI 강제)
-
-* AI가 **새 코드를 작성하거나, 폴더/파일/모듈/클래스를 생성하려고 할 때는 항상 먼저 Vertical Slice 기준으로 설계를 제안한다.**
-* "코딩"에 들어가기 전에, 다음 내용을 브리핑 형태로 먼저 제안한다:
-  1. **Feature 이름과 목적 한 줄 요약**
-     - 예: `AuctionScraper` – 경매 사이트 A의 목록 페이지를 크롤링해서 DB에 저장하는 기능
-  2. **위치(폴더 경로)**
-     - `/src/features/<FeatureName>/{api,app,domain,infra}` 중 어디에 둘지
-  3. **역할 정의**
-     - 이 파일/클래스/함수가 `api` / `app` / `domain` / `infra` 중 어떤 역할을 담당하는지 한 문장으로 설명
-  4. **이름 후보**
-     - 만들 파일/클래스/함수 이름을 **최소 2개 이상** Vertical Slice 이름 규칙에 맞춰 제안한다.
-
-* 위 제안은 항상 **브리핑/질문 단계에서 먼저** 이루어지며,
-  사용자가 **"승인"**이라고 말하기 전에는 실제 코드, 폴더, 모듈을 생성하지 않는다.
-* AI는 구조 제안 시 다음을 기본 전제로 삼는다:
-  - feature 기준 폴더 구조: `/src/features/<FeatureName>/{api,app,domain,infra}`
-  - 공통 비즈니스 개념은 `/src/domain`, 공통 기술 유틸은 `/src/shared`로 승격을 우선 검토한다.
+3. 사용자가 **"승인"**을 명시적으로 말하기 전에는
+   * 실제 폴더/파일/코드를 생성하거나 수정하지 않는다.
