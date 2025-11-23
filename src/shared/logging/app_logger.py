@@ -3,11 +3,11 @@
 
 목적:
 - 애플리케이션 전역에서 사용할 파일 로거 제공
-- shared 폴더의 logs 디렉토리에 app.log 파일로 로그 기록
+- shared/logging 디렉토리에 app.log 파일로 로그 기록
 - 싱글톤 패턴으로 로거 인스턴스 재사용
 
 사용법:
-    from src.shared.app_logger import get_logger
+    from src.shared.logging.app_logger import get_logger
 
     logger = get_logger()
     logger.info("정보 메시지")
@@ -25,8 +25,8 @@ from pathlib import Path
 
 # 로깅 시스템의 중앙화된 로그 파일 경로
 # shared는 기술 공통 영역으로, 여러 feature에서 재사용 가능한 인프라 코드 위치
-LOG_DIR = Path(__file__).parent / "logs"
-LOG_FILE = LOG_DIR / "app.log"
+# app.log는 app_logger.py와 같은 디렉토리에 생성됨
+LOG_FILE = Path(__file__).parent / "app.log"
 
 
 def get_logger() -> logging.Logger:
@@ -36,7 +36,6 @@ def get_logger() -> logging.Logger:
     동작:
     - 처음 호출 시: 로거를 생성하고 FileHandler를 설정
     - 이후 호출 시: 기존에 생성된 로거를 재사용 (핸들러 중복 방지)
-    - logs 폴더가 없으면 자동으로 생성
     - 파일 생성 실패 시 콘솔(StreamHandler)로 폴백
 
     로그 설정:
@@ -67,12 +66,8 @@ def get_logger() -> logging.Logger:
     formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
 
     try:
-        # logs 폴더가 없을 경우 자동 생성하여 FileHandler 에러 방지
-        # parents=True: 부모 디렉토리도 함께 생성
-        # exist_ok=True: 이미 존재해도 에러 발생하지 않음
-        LOG_DIR.mkdir(parents=True, exist_ok=True)
-
         # 파일 핸들러 생성 (매 실행마다 덮어쓰기 모드)
+        # app.log 파일은 app_logger.py와 같은 폴더(shared/logging)에 생성됨
         handler = logging.FileHandler(LOG_FILE, mode="w", encoding="utf-8")
     except OSError:
         # 파일 생성 실패 시 콘솔로 폴백 (권한 문제, 디스크 full 등)

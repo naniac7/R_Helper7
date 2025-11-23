@@ -1,0 +1,10 @@
+setup.py
+R_Helper7.egg-info/PKG-INFO
+R_Helper7.egg-info/SOURCES.txt
+R_Helper7.egg-info/dependency_links.txt
+R_Helper7.egg-info/top_level.txt
+src2/main.py
+src2/features/DiscoreCrawler/discore_crawler.py
+src2/features/chrome_controller/chrome_controller.py
+src2/shared/logging/app_logger.py
+src/shared/logging/app_logger.py
