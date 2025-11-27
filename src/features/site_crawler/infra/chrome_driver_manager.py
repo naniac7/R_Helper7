@@ -25,8 +25,8 @@ def get_chrome_driver(headless: bool = False) -> webdriver.Chrome:
     Returns:
         설정이 완료된 Chrome WebDriver 인스턴스
     """
-    # 프로필 디렉토리 경로 설정
-    feature_dir = Path(__file__).parent
+    # 프로필 디렉토리 경로 설정 (feature 폴더 기준으로 상대 경로 조정)
+    feature_dir = Path(__file__).parent.parent  # infra 폴더에서 한 단계 위로
     profile_dir = feature_dir / "data" / "profiles" / "crawler-profile"
     profile_dir.mkdir(parents=True, exist_ok=True)
 
@@ -55,8 +55,44 @@ def get_chrome_driver(headless: bool = False) -> webdriver.Chrome:
     # ChromeDriver 자동 다운로드 및 설치
     # webdriver-manager는 기본 캐시 디렉토리에 저장됨 (~/.wdm/)
     LOGGER.info("ChromeDriver 다운로드 시작")
-    driver_path = ChromeDriverManager().install()
-    LOGGER.info("ChromeDriver 준비 완료: %s", driver_path)
+
+    try:
+        # 캐시 디렉토리 수동 삭제 (Windows용)
+        import os
+        import shutil
+        wdm_dir = Path.home() / ".wdm"
+        if wdm_dir.exists():
+            LOGGER.info("기존 ChromeDriver 캐시 삭제 중: %s", wdm_dir)
+            try:
+                shutil.rmtree(wdm_dir)
+            except Exception as e:
+                LOGGER.warning("캐시 삭제 실패 (사용 중일 수 있음): %s", e)
+
+        # ChromeDriver 자동 다운로드
+        driver_path = ChromeDriverManager().install()
+        LOGGER.info("ChromeDriver 경로: %s", driver_path)
+
+        # 경로 검증
+        if not Path(driver_path).exists():
+            raise FileNotFoundError(f"ChromeDriver 파일을 찾을 수 없음: {driver_path}")
+
+        # Windows에서 실행 파일 확인
+        if os.name == 'nt' and not driver_path.endswith('.exe'):
+            # .exe 확장자 확인
+            exe_path = driver_path + '.exe'
+            if Path(exe_path).exists():
+                driver_path = exe_path
+                LOGGER.info("Windows용 ChromeDriver 경로 수정: %s", driver_path)
+            else:
+                # chromedriver.exe 파일 직접 찾기
+                parent_dir = Path(driver_path).parent
+                for file in parent_dir.glob("chromedriver*.exe"):
+                    driver_path = str(file)
+                    LOGGER.info("ChromeDriver 실행 파일 발견: %s", driver_path)
+                    break
+    except Exception as exc:
+        LOGGER.error("ChromeDriver 설정 중 에러: %s", exc)
+        raise
 
     service = Service(driver_path)
     driver = webdriver.Chrome(service=service, options=options)

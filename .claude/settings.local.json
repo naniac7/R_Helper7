@@ -2,7 +2,16 @@
   "permissions": {
     "allow": [
       "Bash(python:*)",
-      "Bash(pip install:*)"
+      "Bash(pip install:*)",
+      "Bash(rm:*)",
+      "Bash(dir \"C:\\Users\\DY\\.claude\")",
+      "Bash(dir \"C:\\Users\\DY\\.claude\\skills\")",
+      "Bash(dir \"C:\\Users\\DY\\.claude\\skills\\code-explain-for-beginner\")",
+      "Skill(code-explain-for-beginner)",
+      "Bash(dir /s /b d:python_projectR_Helper7srcfeaturessite_crawler)",
+      "Bash(findstr:*)",
+      "Bash(git -C \"d:\\python_project\\R_Helper7\" rm -r --cached \"src/features/site_crawler/data/profiles/crawler-profile/\")",
+      "Bash(git -C \"d:\\python_project\\R_Helper7\" status --short)"
     ],
     "deny": [],
     "ask": []
