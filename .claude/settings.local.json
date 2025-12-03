@@ -11,7 +11,10 @@
       "Bash(dir /s /b d:python_projectR_Helper7srcfeaturessite_crawler)",
       "Bash(findstr:*)",
       "Bash(git -C \"d:\\python_project\\R_Helper7\" rm -r --cached \"src/features/site_crawler/data/profiles/crawler-profile/\")",
-      "Bash(git -C \"d:\\python_project\\R_Helper7\" status --short)"
+      "Bash(git -C \"d:\\python_project\\R_Helper7\" status --short)",
+      "Bash(mkdir:*)",
+      "Bash(touch:*)",
+      "Skill(debate-with-fact-check)"
     ],
     "deny": [],
     "ask": []
