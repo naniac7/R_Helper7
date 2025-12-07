@@ -14,7 +14,9 @@
       "Bash(git -C \"d:\\python_project\\R_Helper7\" status --short)",
       "Bash(mkdir:*)",
       "Bash(touch:*)",
-      "Skill(debate-with-fact-check)"
+      "Skill(debate-with-fact-check)",
+      "Bash(dir:*)",
+      "Bash(mv:*)"
     ],
     "deny": [],
     "ask": []
