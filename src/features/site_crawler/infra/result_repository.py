@@ -1,6 +1,10 @@
 """
-목적: 크롤링 결과 저장
-크롤링 결과를 JSON 파일로 저장한다.
+레이어: infra
+역할: 크롤링 결과 저장
+의존: domain/models
+외부: json, pathlib
+
+목적: 크롤링 결과를 JSON 파일로 저장한다.
 """
 
 import json

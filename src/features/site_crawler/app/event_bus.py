@@ -1,10 +1,18 @@
 """
-목적: 이벤트 발행/구독 시스템
-단순 딕셔너리 기반으로 이벤트를 발행하고 핸들러를 호출한다.
+레이어: app
+역할: 이벤트 발행/구독 시스템
+의존: 없음
+외부: typing, src.shared.logging.app_logger
+
+목적: 단순 딕셔너리 기반으로 이벤트를 발행하고 핸들러를 호출한다.
 이벤트 발행자와 구독자를 느슨하게 연결하여 확장성을 확보한다.
 """
 
 from typing import Callable, Any, Dict, List
+
+from src.shared.logging.app_logger import get_logger
+
+LOGGER = get_logger()
 
 
 class EventBus:
@@ -45,4 +53,4 @@ class EventBus:
                     handler(event)
                 except Exception as exc:
                     # 핸들러 에러가 다른 핸들러 실행을 막지 않도록 한다
-                    print(f"이벤트 핸들러 에러: {exc}")
+                    LOGGER.warning("이벤트 핸들러 에러: %s", exc)

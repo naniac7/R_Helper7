@@ -1,6 +1,10 @@
 """
-목적: 상세 정보 크롤링 유즈케이스
-건물을 선택하고 상세 정보를 크롤링하여 이벤트로 발행한다.
+레이어: app
+역할: 상세 정보 크롤링 유즈케이스
+의존: app/event_bus, domain/models, domain/events
+외부: typing, src.shared.logging.app_logger
+
+목적: 건물을 선택하고 상세 정보를 크롤링하여 이벤트로 발행한다.
 """
 
 from typing import Protocol

@@ -1,6 +1,10 @@
 """
-목적: 크롤러 인터페이스 정의
-Protocol을 사용하여 구현체와 유즈케이스를 분리한다.
+레이어: infra
+역할: 크롤러 인터페이스(Protocol) 정의
+의존: domain/models
+외부: typing
+
+목적: Protocol을 사용하여 구현체와 유즈케이스를 분리한다.
 """
 
 from typing import Protocol

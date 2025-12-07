@@ -21,6 +21,11 @@ from src.features.oiljang_form_filler.domain.value_objects import (
     LocatorType,
 )
 
+# 레이아웃 상수 (main_window.py와 공유)
+ROW_HORIZONTAL_SPACING = 8  # 위젯 간 가로 간격
+ROW_VERTICAL_SPACING = 6  # 행 간 세로 간격
+ROW_LAYOUT_MARGINS = (0, 0, 0, 0)
+
 # [문자열-변수명 참조 패턴]
 # widget_name 문자열은 실제 위젯 변수명(self.xxx)과 일치해야 함
 # 리팩토링 시 변수명 변경하면 이 문자열도 함께 변경할 것
@@ -104,8 +109,8 @@ class RowWidget(QWidget):
 
         # 레이아웃 구성
         layout = QHBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(8)
+        layout.setContentsMargins(*ROW_LAYOUT_MARGINS)
+        layout.setSpacing(ROW_HORIZONTAL_SPACING)
         layout.addWidget(self.item_input)
         layout.addWidget(self.mode_combo)
         layout.addWidget(self.locator_combo)

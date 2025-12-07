@@ -1,6 +1,10 @@
 """
-목적: 프리셋 불러오기 유즈케이스
-저장된 프리셋을 불러온다.
+레이어: app
+역할: 프리셋 불러오기 유즈케이스
+의존: 없음
+외부: typing, src.shared.logging.app_logger
+
+목적: 저장된 프리셋을 불러온다.
 """
 
 from typing import Protocol, List, Dict, Any

@@ -1,6 +1,10 @@
 """
-목적: 크롤링 결과 저장 유즈케이스
-크롤링 결과를 JSON 파일로 저장한다.
+레이어: app
+역할: 크롤링 결과 저장 유즈케이스
+의존: domain/models
+외부: pathlib, typing, src.shared.logging.app_logger
+
+목적: 크롤링 결과를 JSON 파일로 저장한다.
 """
 
 from pathlib import Path

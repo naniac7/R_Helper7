@@ -1,7 +1,10 @@
 """
-목적: 크롤링 결과를 표시하는 행 위젯
+레이어: api
+역할: 크롤링 결과를 표시하는 행 위젯
+의존: 없음
+외부: PyQt5
 
-CrawlingItemResultRow: 제목 + 크롤링 결과 내용을 한 행으로 표시
+목적: CrawlingItemResultRow - 제목 + 크롤링 결과 내용을 한 행으로 표시
 """
 
 from PyQt5.QtWidgets import (

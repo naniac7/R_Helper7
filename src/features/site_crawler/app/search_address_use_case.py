@@ -1,6 +1,10 @@
 """
-목적: 주소 검색 유즈케이스
-주소를 검색하고 자동완성 목록을 이벤트로 발행한다.
+레이어: app
+역할: 주소 검색 유즈케이스
+의존: app/event_bus, domain/models, domain/events
+외부: typing, src.shared.logging.app_logger
+
+목적: 주소를 검색하고 자동완성 목록을 이벤트로 발행한다.
 """
 
 from typing import Protocol

@@ -1,11 +1,19 @@
 """
-목적: 프리셋 저장/로드
-크롤링 행 제목 프리셋을 JSON 파일로 관리한다.
+레이어: infra
+역할: 프리셋 저장/로드
+의존: 없음
+외부: json, pathlib, typing, src.shared.logging.app_logger
+
+목적: 크롤링 행 제목 프리셋을 JSON 파일로 관리한다.
 """
 
 import json
 from pathlib import Path
 from typing import List, Dict, Any
+
+from src.shared.logging.app_logger import get_logger
+
+LOGGER = get_logger()
 
 
 class PresetRepository:
@@ -47,7 +55,7 @@ class PresetRepository:
                 return json.load(f)
         except (json.JSONDecodeError, IOError) as exc:
             # 파일이 손상되었거나 읽을 수 없는 경우 빈 리스트 반환
-            print(f"프리셋 파일 로드 실패: {exc}")
+            LOGGER.warning("프리셋 파일 로드 실패: %s", exc)
             return []
 
     def save(self, preset_data: List[Dict[str, Any]]) -> None:

@@ -151,6 +151,20 @@ src/features/site_crawler/
 
 ## 변경 이력
 
+### 2025-12-08: 코드 리뷰 기반 품질 개선
+- **중복 파일 삭제**: 루트의 `chrome_driver_manager.py` 삭제 (infra/ 버전만 유지)
+- **로깅 일관성**: `print()` → `LOGGER.warning()` 변경
+  - event_bus.py, settings_repository.py, preset_repository.py
+- **인덱스 경계 검증 추가**: site_crawler_widget.py (규칙23 준수)
+  - `_handle_address_selection()`, `_handle_building_selection()`에 범위 체크 추가
+- **sleep 주석 추가**: selenium_crawler.py
+  - 동적 대기만으로 데이터 바인딩 완료를 보장할 수 없어 sleep 유지 (이유 명시)
+- **헤더 주석 표준화**: 17개 파일 전체
+  - 규칙13 형식 적용 (레이어, 역할, 의존, 외부, 목적)
+- **Chrome 로그 최소화**: chrome_driver_manager.py
+  - `enable-logging` 비활성화 + `--log-level=3` 설정 (치명적 에러만 출력)
+- 수정 파일: 17개 전체
+
 ### 2025-11-27: 건물 선택 UX 개선 및 버그 수정
 - **건물 1개 자동 크롤링**: 건물이 1개뿐일 때 자동 선택 + 자동 크롤링 실행
 - **첫 크롤링 UI 미표시 버그 수정**: QComboBox 시그널 블로킹으로 이벤트 루프 차단 문제 해결

@@ -1,6 +1,10 @@
 """
-목적: Site Crawler feature 독립 실행 엔트리 포인트
-DI 컨테이너 역할: 모든 의존성을 여기서 조립한다.
+레이어: api (엔트리 포인트)
+역할: Site Crawler feature 독립 실행 및 DI 컨테이너
+의존: app/event_bus, app/*_use_case, infra/*, api/gui/main_window, domain/events
+외부: sys, PyQt5.QtWidgets, src.shared.logging.app_logger
+
+목적: 모든 의존성을 여기서 조립하고 이벤트 구독을 설정한다.
 
 실행 방법:
     python -m src.features.site_crawler

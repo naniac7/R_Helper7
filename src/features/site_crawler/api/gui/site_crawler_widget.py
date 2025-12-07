@@ -1,7 +1,10 @@
 """
-목적: Site Crawler 핵심 UI 위젯
+레이어: api
+역할: Site Crawler 핵심 UI 위젯
+의존: api/gui/crawling_item_result_row, domain/models, domain/events, app/*_use_case
+외부: json, pathlib, contextlib, datetime, typing, PyQt5, src.shared.logging.app_logger
 
-SiteCrawlerWidget: 크롤러 UI 로직을 담당하는 QWidget
+목적: SiteCrawlerWidget - 크롤러 UI 로직을 담당하는 QWidget
 독립적으로 사용 가능하며, 다른 윈도우에 임베딩 가능
 """
 
@@ -359,6 +362,11 @@ class SiteCrawlerWidget(QWidget):
         # 콤보박스 인덱스는 1부터 시작 ("주소 선택" 항목 제외)
         crawler_index = index - 1
 
+        # 인덱스 경계 검증 (규칙23: 인덱스/컬렉션 미검증 금지)
+        if crawler_index < 0 or crawler_index >= len(self.current_addresses):
+            self.update_status("잘못된 주소 선택입니다.")
+            return
+
         if self.select_building_uc:
             with self.wait_cursor():
                 self.select_building_uc.execute(crawler_index)
@@ -386,6 +394,11 @@ class SiteCrawlerWidget(QWidget):
 
         # 플레이스홀더 제외한 실제 건물 인덱스 (index - 1)
         crawler_index = index - 1
+
+        # 인덱스 경계 검증 (규칙23: 인덱스/컬렉션 미검증 금지)
+        if crawler_index < 0 or crawler_index >= len(self.current_buildings):
+            self.update_status("잘못된 건물 선택입니다.")
+            return
 
         if self.crawl_uc:
             with self.wait_cursor():

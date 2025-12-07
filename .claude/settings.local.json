@@ -16,7 +16,8 @@
       "Bash(touch:*)",
       "Skill(debate-with-fact-check)",
       "Bash(dir:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(git -C \"d:\\python_project\\R_Helper7\" rm --cached:*)"
     ],
     "deny": [],
     "ask": []

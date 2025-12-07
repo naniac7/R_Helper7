@@ -1,7 +1,10 @@
 """
-목적: Site Crawler 메인 윈도우
+레이어: api
+역할: Site Crawler 메인 윈도우
+의존: api/gui/site_crawler_widget, app/*_use_case, infra/settings_repository
+외부: json, pathlib, typing, PyQt5
 
-SiteCrawlerMainWindow: 독립 실행용 QMainWindow
+목적: SiteCrawlerMainWindow - 독립 실행용 QMainWindow
 메뉴바와 설정 관리 기능 포함
 """
 

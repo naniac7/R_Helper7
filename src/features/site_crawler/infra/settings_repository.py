@@ -1,11 +1,19 @@
 """
-목적: 설정 저장/로드
-JSON 파일로 설정을 관리한다.
+레이어: infra
+역할: 설정 저장/로드
+의존: 없음
+외부: json, pathlib, typing, src.shared.logging.app_logger
+
+목적: JSON 파일로 설정을 관리한다.
 """
 
 import json
 from pathlib import Path
 from typing import Dict, Any
+
+from src.shared.logging.app_logger import get_logger
+
+LOGGER = get_logger()
 
 
 class SettingsRepository:
@@ -48,7 +56,7 @@ class SettingsRepository:
                 return json.load(f)
         except (json.JSONDecodeError, IOError) as exc:
             # 파일이 손상되었거나 읽을 수 없는 경우 기본값 반환
-            print(f"설정 파일 로드 실패: {exc}")
+            LOGGER.warning("설정 파일 로드 실패: %s", exc)
             return {"headless_mode": False}
 
     def save(self, settings: Dict[str, Any]) -> None:

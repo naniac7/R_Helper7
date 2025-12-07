@@ -1,6 +1,10 @@
 """
-목적: 프리셋 저장 유즈케이스
-크롤링 행 제목을 프리셋으로 저장한다.
+레이어: app
+역할: 프리셋 저장 유즈케이스
+의존: 없음
+외부: typing, src.shared.logging.app_logger
+
+목적: 크롤링 행 제목을 프리셋으로 저장한다.
 """
 
 from typing import Protocol, List, Dict, Any

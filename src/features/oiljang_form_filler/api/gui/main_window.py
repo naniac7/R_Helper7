@@ -22,6 +22,9 @@ from PyQt5.QtWidgets import (
 
 from src.features.oiljang_form_filler.api.gui.row_widget import (
     FIELD_CONFIG,
+    ROW_HORIZONTAL_SPACING,
+    ROW_LAYOUT_MARGINS,
+    ROW_VERTICAL_SPACING,
     RowWidget,
 )
 from src.features.oiljang_form_filler.app.fill_field_use_case import FillFieldUseCase
@@ -100,8 +103,8 @@ class MainWindow(QWidget):
 
         # 헤더 (FIELD_CONFIG 기반으로 라벨 생성)
         header_layout = QHBoxLayout()
-        header_layout.setContentsMargins(0, 0, 0, 0)
-        header_layout.setSpacing(8)
+        header_layout.setContentsMargins(*ROW_LAYOUT_MARGINS)
+        header_layout.setSpacing(ROW_HORIZONTAL_SPACING)
 
         for field in FIELD_CONFIG:
             label = QLabel(field["label"])
@@ -113,7 +116,8 @@ class MainWindow(QWidget):
 
         # 행 목록 레이아웃
         self.rows_layout = QVBoxLayout()
-        self.rows_layout.setSpacing(6)
+        self.rows_layout.setContentsMargins(*ROW_LAYOUT_MARGINS)
+        self.rows_layout.setSpacing(ROW_VERTICAL_SPACING)
 
         # 모두 전송 버튼
         self.send_all_button = QPushButton("모두 전송")

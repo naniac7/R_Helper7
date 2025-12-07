@@ -1,6 +1,10 @@
 """
-목적: Selenium 기반 크롤러 구현
-기존 core/site_crawler.py의 Selenium 로직을 이동하되,
+레이어: infra
+역할: Selenium 기반 크롤러 구현
+의존: domain/models, infra/chrome_driver_manager
+외부: time, typing, selenium, src.shared.logging.app_logger
+
+목적: 기존 core/site_crawler.py의 Selenium 로직을 이동하되,
 - 콜백 제거 → 순수 반환값으로 변경
 - 인스턴스 변수(address_list, building_list) 제거 → 지역 변수 사용
 - 메서드 분리: select_address() + get_buildings()
@@ -138,6 +142,8 @@ class SeleniumCrawler:
         LOGGER.info("주소 입력 완료: %s", address)
 
         # 자동완성 생성 대기
+        # 이유: 동적 대기(wait.until)만으로는 자동완성 데이터 바인딩 완료를 보장할 수 없음
+        # 요소가 DOM에 나타나도 내부 데이터가 아직 렌더링 중일 수 있어 sleep 유지
         time.sleep(0.5)
 
         # 자동완성 목록 파싱
@@ -296,6 +302,8 @@ class SeleniumCrawler:
         # 건물 목록 요소 대기
         wait = WebDriverWait(self.driver, 2)
         wait.until(EC.presence_of_element_located((By.CLASS_NAME, "ddiv-build-content")))
+        # 이유: 동적 대기 후에도 건물 목록 내부 데이터 렌더링 시간 필요
+        # 요소 존재 확인과 데이터 바인딩 완료는 다름
         time.sleep(0.5)
 
         # 건물 요소들 가져오기
